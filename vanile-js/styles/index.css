@@ -134,6 +134,11 @@ button:hover {
   color: white;
   background-color: rgba(211, 211, 211, 0.05);
   border: 1px solid transparent;
+  transition: all 0.4s;
+}
+
+.menu-btn i {
+  transition: all 0.4s;
 }
 
 .menu-btn:focus,
@@ -231,4 +236,18 @@ button:hover {
   background-color: var(--turquoise);
   color: #2a4544;
   border-radius: 3px;
+}
+
+.rotate {
+  animation: 0.4s ease-in-out shevron-rotation;
+  transform: rotate(180deg);
+}
+
+@keyframes shevron-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
 }
