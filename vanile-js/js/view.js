@@ -14,7 +14,7 @@ export default class View {
     this.$.modalBtn = this.#qs('[data-id="modal-btn"]');
     this.$.turn = this.#qs('[data-id="turn"]');
 
-    this.$.gameFields = this.#qsAll('[data-id="square"]');
+    this.$$.gameFields = this.#qsAll('[data-id="square"]');
 
     // UI only event listeners
 
@@ -47,6 +47,34 @@ export default class View {
     icon.classList.toggle('rotate');
   }
 
+  showTernInfo(player) {
+    const icon = document.createElement('i');
+
+    if (player === 2) {
+      icon.classList.add('fa-solid', 'fa-o', 'yellow');
+      this.$.turn.classList.remove('yellow');
+      this.$.turn.classList.add('turquoise');
+    } else {
+      icon.classList.add('fa-solid', 'fa-x', 'turquoise');
+      this.$.turn.classList.remove('turquoise');
+      this.$.turn.classList.add('yellow');
+    }
+
+    this.$.turn.innerHTML = `
+            <i class="fa-solid fa-${player === 1 ? 'o' : 'x'}"></i>
+            <p>Player ${player}, you're up!</p>
+          `;
+  }
+
+  handlePlayerMove(square, player) {
+    const icon = document.createElement('i');
+    icon.classList.add('fa-solid');
+    player === 1
+      ? icon.classList.add('fa-o', 'yellow')
+      : icon.classList.add('fa-x', 'turquoise');
+    this.$$.gameFields[square - 1].replaceChildren(icon);
+  }
+
   #qs(selector, parent) {
     const element = parent
       ? parent.querySelector(selector)
@@ -57,7 +85,7 @@ export default class View {
   }
 
   #qsAll(selector) {
-    const elsList = document.querySelector(selector);
+    const elsList = document.querySelectorAll(selector);
 
     if (!elsList) throw new Error("Could't find elements");
     return elsList;

@@ -148,5 +148,10 @@ function init() {
     console.log('Reset');
     console.log(event);
   });
+
+  view.bindGameField(function (event) {
+    view.showTernInfo(2);
+    view.handlePlayerMove(event.target.id, 1);
+  });
 }
 window.addEventListener('load', init);
