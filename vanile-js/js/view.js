@@ -1,18 +1,20 @@
 export default class View {
   $ = {};
+  $$ = {};
 
   constructor() {
-    this.$.menu = document.querySelector('[data-id="menu"]');
-    this.$.menuBtn = document.querySelector('[data-id="menu-btn"]');
-    this.$.menuItems = document.querySelector('[data-id="menu-items"]');
-    this.$.resetBtn = document.querySelector('[data-id="reset-btn"]');
-    this.$.newRoundBtn = document.querySelector('[data-id="new-round-btn"]');
-    this.$.gameField = document.querySelector('[data-id="grid"]');
-    this.$.gameFields = document.querySelectorAll('[data-id="square"]');
-    this.$.modal = document.querySelector('[data-id="modal"]');
-    this.$.modalText = document.querySelector('[data-id="modal-text"]');
-    this.$.modalBtn = document.querySelector('[data-id="modal-btn"]');
-    this.$.turn = document.querySelector('[data-id="turn"]');
+    this.$.menu = this.#qs('[data-id="menu"]');
+    this.$.menuBtn = this.#qs('[data-id="menu-btn"]');
+    this.$.menuItems = this.#qs('[data-id="menu-items"]');
+    this.$.resetBtn = this.#qs('[data-id="reset-btn"]');
+    this.$.newRoundBtn = this.#qs('[data-id="new-round-btn"]');
+    this.$.gameField = this.#qs('[data-id="grid"]');
+    this.$.modal = this.#qs('[data-id="modal"]');
+    this.$.modalText = this.#qs('[data-id="modal-text"]');
+    this.$.modalBtn = this.#qs('[data-id="modal-btn"]');
+    this.$.turn = this.#qs('[data-id="turn"]');
+
+    this.$.gameFields = this.#qsAll('[data-id="square"]');
 
     // UI only event listeners
 
@@ -41,7 +43,23 @@ export default class View {
   toggleMenu() {
     this.$.menuItems.classList.toggle('hidden');
     this.$.menu.classList.toggle('border');
-    const icon = this.$.menu.querySelector('i');
+    const icon = this.#qs('i', this.menu);
     icon.classList.toggle('rotate');
+  }
+
+  #qs(selector, parent) {
+    const element = parent
+      ? parent.querySelector(selector)
+      : document.querySelector(selector);
+
+    if (!element) throw new Error("Could't find an element");
+    return element;
+  }
+
+  #qsAll(selector) {
+    const elsList = document.querySelector(selector);
+
+    if (!elsList) throw new Error("Could't find elements");
+    return elsList;
   }
 }
