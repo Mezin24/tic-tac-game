@@ -24,6 +24,8 @@ export default class View {
 
   bindResetEvent(handler) {
     this.$.resetBtn.addEventListener('click', handler);
+    this.$.modalBtn.addEventListener('click', handler);
+    // TODO 4:40
   }
 
   bindNewRoundEvent(handler) {
@@ -47,32 +49,24 @@ export default class View {
     icon.classList.toggle('rotate');
   }
 
-  showTernInfo(player) {
-    const icon = document.createElement('i');
+  openModal(message) {
+    this.$.modal.classList.remove('hidden');
+    this.$.modalText.textContent = message;
+  }
 
-    if (player === 2) {
-      icon.classList.add('fa-solid', 'fa-o', 'yellow');
-      this.$.turn.classList.remove('yellow');
-      this.$.turn.classList.add('turquoise');
-    } else {
-      icon.classList.add('fa-solid', 'fa-x', 'turquoise');
-      this.$.turn.classList.remove('turquoise');
-      this.$.turn.classList.add('yellow');
-    }
-
+  showTernInfo({ name, iconClass, colorClass }) {
     this.$.turn.innerHTML = `
-            <i class="fa-solid fa-${player === 1 ? 'o' : 'x'}"></i>
-            <p>Player ${player}, you're up!</p>
+            <i class="fa-solid ${iconClass} ${colorClass}"></i>
+            <p class=${colorClass}>${name}, you're up!</p>
           `;
   }
 
-  handlePlayerMove(square, player) {
-    const icon = document.createElement('i');
-    icon.classList.add('fa-solid');
-    player === 1
-      ? icon.classList.add('fa-o', 'yellow')
-      : icon.classList.add('fa-x', 'turquoise');
-    this.$$.gameFields[square - 1].replaceChildren(icon);
+  handlePlayerMove(square, { iconClass, colorClass }) {
+    if (square.dataset.id !== 'square') return;
+
+    square.innerHTML = `
+      <i class="fa-solid ${iconClass} ${colorClass}"></i>
+    `;
   }
 
   #qs(selector, parent) {
