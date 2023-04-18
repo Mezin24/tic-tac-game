@@ -21,32 +21,32 @@ function init() {
   const view = new View();
   const store = new Store('t3-storage', players);
 
-  function initView() {
-    view.closeAll();
-    view.showTernInfo(store.game.currentPlayer);
-    view.clearFields();
-    view.showStats(
-      store.stats.playerWins[0].wins,
-      store.stats.playerWins[1].wins,
-      store.stats.ties
-    );
-    view.viewFields(store.game.moves);
-  }
-
+  // function initView() {
+  //   view.closeAll();
+  //   view.showTernInfo(store.game.currentPlayer);
+  //   view.clearFields();
+  //   view.showStats(
+  //     store.stats.playerWins[0].wins,
+  //     store.stats.playerWins[1].wins,
+  //     store.stats.ties
+  //   );
+  //   view.viewFields(store.game.moves);
+  // }
+  view.render(store.game, store.stats);
   window.addEventListener('storage', () => {
-    initView();
+    view.render(store.game, store.stats);
   });
 
-  initView();
+  // initView();
 
   view.bindNewRoundEvent(() => {
     store.newRound();
-    initView();
+    view.render(store.game, store.stats);
   });
 
   view.bindResetEvent(() => {
     store.reset();
-    initView();
+    view.render(store.game, store.stats);
   });
 
   view.bindGameField(function (event) {
@@ -59,16 +59,7 @@ function init() {
 
     view.handlePlayerMove(square, store.game.currentPlayer);
     store.playMove(+square.id);
-    if (store.game.status.isCompleted) {
-      view.openModal(
-        store.game.status.winner
-          ? `${store.game.status.winner.name} wins!`
-          : 'Tie!'
-      );
-
-      return;
-    }
-    view.showTernInfo(store.game.currentPlayer);
+    view.render(store.game, store.stats);
   });
 }
 window.addEventListener('load', init);

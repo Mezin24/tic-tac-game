@@ -21,7 +21,7 @@ export default class View {
 
     // UI only event listeners
 
-    this.$.menuBtn.addEventListener('click', this.toggleMenu.bind(this));
+    this.$.menuBtn.addEventListener('click', this.#toggleMenu.bind(this));
   }
   // REGISTER EVENTS METHODS
 
@@ -38,23 +38,45 @@ export default class View {
     this.$.gameField.addEventListener('click', handler);
   }
 
+  render(game, stats) {
+    const {
+      moves,
+      currentPlayer,
+      status: { isCompleted, winner },
+    } = game;
+
+    const { playerWins, ties } = stats;
+
+    this.#closeAll();
+    this.#clearFields();
+    this.#showStats(playerWins[0].wins, playerWins[1].wins, ties);
+    this.#viewFields(moves);
+
+    if (isCompleted) {
+      this.#openModal(winner ? `${winner.name} wins!` : 'Tie!');
+
+      return;
+    }
+    this.#showTernInfo(currentPlayer);
+  }
+
   // DOM HELPERS METHODS
 
-  toggleMenu() {
+  #toggleMenu() {
     this.$.menuItems.classList.toggle('hidden');
     this.$.menu.classList.toggle('border');
     const icon = this.#qs('i', this.$.menu);
     icon.classList.toggle('rotate');
   }
 
-  closeMenu() {
+  #closeMenu() {
     this.$.menuItems.classList.add('hidden');
     this.$.menu.classList.remove('border');
     const icon = this.#qs('i', this.$.menu);
     icon.classList.remove('rotate');
   }
 
-  openModal(message) {
+  #openModal(message) {
     this.$.modal.classList.remove('hidden');
     this.$.modalText.textContent = message;
   }
@@ -63,23 +85,23 @@ export default class View {
     this.$.modal.classList.add('hidden');
   }
 
-  closeAll() {
+  #closeAll() {
     this.#closeModal();
-    this.closeMenu();
+    this.#closeMenu();
   }
 
-  showTernInfo({ name, iconClass, colorClass }) {
+  #showTernInfo({ name, iconClass, colorClass }) {
     this.$.turn.innerHTML = `
       <i class="fa-solid ${iconClass} ${colorClass}"></i>
       <p class=${colorClass}>${name}, you're up!</p>
     `;
   }
 
-  clearFields() {
+  #clearFields() {
     this.$$.gameFields.forEach((field) => (field.innerHTML = ''));
   }
 
-  viewFields(moves) {
+  #viewFields(moves) {
     this.$$.gameFields.forEach((field) => {
       const existingMove = moves.find((move) => move.squareId === +field.id);
 
@@ -97,7 +119,7 @@ export default class View {
     `;
   }
 
-  showStats(p1Wins, p2Wins, ties) {
+  #showStats(p1Wins, p2Wins, ties) {
     this.$.p1Wins.textContent = `${p1Wins} Wins`;
     this.$.p2Wins.textContent = `${p2Wins} Wins`;
     this.$.ties.textContent = ties;
