@@ -33,6 +33,10 @@ function init() {
     view.viewFields(store.game.moves);
   }
 
+  window.addEventListener('storage', () => {
+    initView();
+  });
+
   initView();
 
   view.bindNewRoundEvent(() => {
