@@ -21,32 +21,21 @@ function init() {
   const view = new View();
   const store = new Store('t3-storage', players);
 
-  // function initView() {
-  //   view.closeAll();
-  //   view.showTernInfo(store.game.currentPlayer);
-  //   view.clearFields();
-  //   view.showStats(
-  //     store.stats.playerWins[0].wins,
-  //     store.stats.playerWins[1].wins,
-  //     store.stats.ties
-  //   );
-  //   view.viewFields(store.game.moves);
-  // }
   view.render(store.game, store.stats);
   window.addEventListener('storage', () => {
     view.render(store.game, store.stats);
   });
 
-  // initView();
+  store.addEventListener('statechange', () => {
+    view.render(store.game, store.stats);
+  });
 
   view.bindNewRoundEvent(() => {
     store.newRound();
-    view.render(store.game, store.stats);
   });
 
   view.bindResetEvent(() => {
     store.reset();
-    view.render(store.game, store.stats);
   });
 
   view.bindGameField(function (event) {
@@ -59,7 +48,6 @@ function init() {
 
     view.handlePlayerMove(square, store.game.currentPlayer);
     store.playMove(+square.id);
-    view.render(store.game, store.stats);
   });
 }
 window.addEventListener('load', init);
