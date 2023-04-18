@@ -13,6 +13,9 @@ export default class View {
     this.$.modalText = this.#qs('[data-id="modal-text"]');
     this.$.modalBtn = this.#qs('[data-id="modal-btn"]');
     this.$.turn = this.#qs('[data-id="turn"]');
+    this.$.p1Wins = this.#qs('[data-id="p1-wins"]');
+    this.$.p2Wins = this.#qs('[data-id="p2-wins"]');
+    this.$.ties = this.#qs('[data-id="ties"]');
 
     this.$$.gameFields = this.#qsAll('[data-id="square"]');
 
@@ -25,7 +28,6 @@ export default class View {
   bindResetEvent(handler) {
     this.$.resetBtn.addEventListener('click', handler);
     this.$.modalBtn.addEventListener('click', handler);
-    // TODO 4:40
   }
 
   bindNewRoundEvent(handler) {
@@ -33,7 +35,7 @@ export default class View {
   }
 
   bindPlayAgainEvent(handler) {
-    this.$.modalBtn.addEventListener('click', handler);
+    // this.$.modalBtn.addEventListener('click', handler);
   }
 
   bindGameField(handler) {
@@ -45,8 +47,15 @@ export default class View {
   toggleMenu() {
     this.$.menuItems.classList.toggle('hidden');
     this.$.menu.classList.toggle('border');
-    const icon = this.#qs('i', this.menu);
+    const icon = this.#qs('i', this.$.menu);
     icon.classList.toggle('rotate');
+  }
+
+  closeMenu() {
+    this.$.menuItems.classList.add('hidden');
+    this.$.menu.classList.remove('border');
+    const icon = this.#qs('i', this.$.menu);
+    icon.classList.remove('rotate');
   }
 
   openModal(message) {
@@ -54,11 +63,24 @@ export default class View {
     this.$.modalText.textContent = message;
   }
 
+  #closeModal() {
+    this.$.modal.classList.add('hidden');
+  }
+
+  closeAll() {
+    this.#closeModal();
+    this.closeMenu();
+  }
+
   showTernInfo({ name, iconClass, colorClass }) {
     this.$.turn.innerHTML = `
-            <i class="fa-solid ${iconClass} ${colorClass}"></i>
-            <p class=${colorClass}>${name}, you're up!</p>
-          `;
+      <i class="fa-solid ${iconClass} ${colorClass}"></i>
+      <p class=${colorClass}>${name}, you're up!</p>
+    `;
+  }
+
+  clearFields() {
+    this.$$.gameFields.forEach((field) => (field.innerHTML = ''));
   }
 
   handlePlayerMove(square, { iconClass, colorClass }) {
@@ -67,6 +89,12 @@ export default class View {
     square.innerHTML = `
       <i class="fa-solid ${iconClass} ${colorClass}"></i>
     `;
+  }
+
+  showStats(p1Wins, p2Wins, ties) {
+    this.$.p1Wins.textContent = `${p1Wins} Wins`;
+    this.$.p2Wins.textContent = `${p2Wins} Wins`;
+    this.$.ties.textContent = ties;
   }
 
   #qs(selector, parent) {

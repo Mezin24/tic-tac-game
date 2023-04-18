@@ -162,8 +162,15 @@ function init() {
   });
 
   view.bindResetEvent((event) => {
-    console.log('Reset');
-    console.log(event);
+    view.closeAll();
+    store.reset();
+    view.showTernInfo(store.game.currentPlayer);
+    view.clearFields();
+    view.showStats(
+      store.stats.playerWins[0].wins,
+      store.stats.playerWins[1].wins,
+      store.stats.ties
+    );
   });
 
   view.bindGameField(function (event) {
