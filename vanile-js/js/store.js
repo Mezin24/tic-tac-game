@@ -7,9 +7,8 @@ const initialValue = {
 };
 
 export default class Store {
-  #state = initialValue;
-
-  constructor(players) {
+  constructor(key, players) {
+    this.storageKey = key;
     this.players = players;
   }
 
@@ -54,7 +53,6 @@ export default class Store {
 
   get stats() {
     const state = this.#getState();
-    console.log(state);
     return {
       playerWins: this.players.map((player) => {
         const wins = state.history.currentRoundGames.filter(
@@ -97,11 +95,24 @@ export default class Store {
     this.#setState(stateClone);
   }
 
-  #getState() {
-    return this.#state;
+  newRound() {
+    this.reset();
+    const stateClone = structuredClone(this.#getState());
+    stateClone.history.allGames = [
+      ...stateClone.history.allGames,
+      ...stateClone.history.currentRoundGames,
+    ];
+    stateClone.history.currentRoundGames = [];
+    this.#setState(stateClone);
   }
+
+  #getState() {
+    const state = localStorage.getItem(this.storageKey);
+    return state ? JSON.parse(state) : initialValue;
+  }
+
   #setState(stateOrFn) {
-    const prevState = this.#state;
+    const prevState = this.#getState();
     let newState;
 
     switch (typeof stateOrFn) {
@@ -115,6 +126,6 @@ export default class Store {
         throw new Error('Invalid argument passed to saveState');
     }
 
-    this.#state = newState;
+    localStorage.setItem(this.storageKey, JSON.stringify(newState));
   }
 }

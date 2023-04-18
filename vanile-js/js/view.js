@@ -34,10 +34,6 @@ export default class View {
     this.$.newRoundBtn.addEventListener('click', handler);
   }
 
-  bindPlayAgainEvent(handler) {
-    // this.$.modalBtn.addEventListener('click', handler);
-  }
-
   bindGameField(handler) {
     this.$.gameField.addEventListener('click', handler);
   }
@@ -81,6 +77,16 @@ export default class View {
 
   clearFields() {
     this.$$.gameFields.forEach((field) => (field.innerHTML = ''));
+  }
+
+  viewFields(moves) {
+    this.$$.gameFields.forEach((field) => {
+      const existingMove = moves.find((move) => move.squareId === +field.id);
+
+      if (existingMove) {
+        this.handlePlayerMove(field, existingMove.player);
+      }
+    });
   }
 
   handlePlayerMove(square, { iconClass, colorClass }) {
